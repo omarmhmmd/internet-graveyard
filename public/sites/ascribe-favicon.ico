@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ascribe</title>
+
+    <link rel="stylesheet" href="https://use.typekit.net/gma2yhj.css">
+    <link rel="stylesheet" href="assets/style.css">
+
+    <link rel="apple-touch-icon" href="assets/favicon.png">
+    <link rel="icon" href="assets/favicon.png">
+</head>
+
+<body>
+    <img class="banner" src="assets/banner.svg" alt="ascribe banner" />
+        
+    <main class="content">
+        <header>
+            <h1>ascribe is no longer active</h1>
+        </header>
+    
+        <p>In 2013, we saw an “elephant in the room problem” in the digital art world: collectors did not understand how to value something “ephemeral” like a digital file, and it was hard for artists working with digital tools monetize their work. Digital files have different properties than physical paintings: they can be copied easily with no loss of quality, and spread on the internet in seconds. We had been asking the question: how do you collect digitally based artworks? Then we realized: what if you could own digital art the way you own Bitcoin?</p>
+    
+        <p>This was the starting point for ascribe, before blockchain (or even Bitcoin) went mainstream. The idea behind it was to give everyone more control over their work: for the first time in history, creators could break the lock on content, distribution and licensing of the entrenched players.</p>
+        
+        <p>While it was clear from the beginning that the concept of ascribe could be applied to music, 3D design, personal data and intellectual property (IP) in general, we focused on digital art because the issue was well-scoped and because we had art expertise in our team.</p>
+        
+        <p>With a beta throughout 2014, the project officially launched in January 2015 and reflected our vision: empower people, make it possible for them to monetize digital property, create a wallet of property, turn digital property into something bankable, legal and offer this way a bounty of possibilities. That vision has not changed.</p>
+        
+        <p>On the way, we discovered that there was still a lot of blockchain infrastructure work to do in terms of scaling, user experience, interoperability, and security. Two of these in particular impacted ascribe.</p>
+        
+        <p>First, the IP licensing wasn’t flexible enough, which harmed the user experience. We solved that via collaborations in 2015 and 2016 through a <a href="http://coala.global/">COALA</a> working group, resulting in a standard called <a href="http://coalaip.org/">COALA IP</a>.</p>
+        
+        <p>The second – and much larger – issue was one of scale. For example, one marketplace considering ascribe was processing 100,000 photos a day. That was the same number as the Bitcoin network at the time; and Bitcoin itself was already considered clogged. We couldn’t Merkle-ize and lump the transactions because we needed clean provenance; we needed a decentralized approach to store structured data—a database. In parallel with our work, we saw friends building decentralized applications having the same challenges of scale.</p>
+        
+        <p><strong>In short: while the ascribe concept made sense, the underlying infrastructure needed to be more mature.</strong></p>
+        
+        <p>This led us to build <a href="https://www.bigchaindb.com/">BigchainDB</a> – a blockchain database. With ascribe as lead customer, we started the prototype in mid-2015, and in February 2016 we open-sourced the alpha code. However, as 2016 progressed, we found it increasingly difficult to split attention between BigchainDB and ascribe. This is why we decided to focus new development on BigchainDB, while still maintaining the ascribe service. We’ve then continued to improve upon BigchainDB, releasing 1.0 last year and 2.0 more recently.</p>
+        
+        <p>In all of these changes, we never forgot ascribe and of helping creators and protecting personal data (IP). These principles led us to start the <a href="https://oceanprotocol.com/">Ocean Protocol</a> project in 2017. Ocean is a decentralized substrate to democratize AI training data &amp; services, and <strong>at the very heart of Ocean is a system to manage IP and provenance</strong>. This means it has mechanisms for claiming copyright and subsequent licensing, therefore we’re drawing on all our ascribe experience to build Ocean (for example, Ocean will use the COALA IP protocol).</p>
+        
+        <p>In the five years since we started working on ascribe, the blockchain landscape has shifted dramatically. In 2013, Ethereum hadn’t even been conceived. Now there is a large and healthy decentralized application ecosystem sparked largely by Ethereum; there is a Non Fungible Token (NFT) standard and several related “digital collectible” standards flowering around it; and there several high-quality blockchain IP projects with many of those are using COALA IP (e.g. Ujo Music). We’re delighted to see such a large number of projects aiming for the goals that ascribe set many years ago. Creators first!</p>
+        
+        <p><strong>Looking back, it’s clear that ascribe was at least a few years too early to market. However, it’s also clear that ascribe has massively influenced our own subsequent work, and the learnings and protocols (most notably COALA IP) have then benefitted other projects.</strong></p>
+        
+        <p><strong>After all these years, we continue to see great interest in ascribe from the artist community.</strong></p>
+        
+        <p>To best serve the needs of these artists and institutions, we fully open sourced the ascribe codebase to the interested community. Artists and institutions alike are able to run their own service.</p>
+
+        <p><strong><a href="https://github.com/ascribe">>> ascribe on GitHub <<</a></strong></p>
+        
+        <p>We’d like to thank you for supporting ascribe over the years.</p>
+        
+        <p>Truly Yours,</p>
+        
+        <p>ascribe team</p>
+    </main>
+
+    <footer class="footer">
+        © <span id="year">2018</span> <a href="https://www.bigchaindb.com">BigchainDB GmbH</a>
+
+        <div class="content imprint">
+            <div>
+                BigchainDB GmbH<br />
+                Chausseestraße 19<br />
+                10115 Berlin<br />
+                Commercial Court: Berlin Charlottenburg<br />
+                Register Number: 160856
+            </div>
+            <div>
+                Bruce Pon<br />
+                +49 30 6482 6092<br />
+                <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9bf9e9eef8fedbf9f2fcf8f3faf2f5fff9b5f8f4f6">[email&#160;protected]</a>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        const yearText = document.getElementById('year')
+        const year = (new Date()).getFullYear()
+        yearText.innerHTML = year
+    </script>
+    
+</body>
+
+</html>

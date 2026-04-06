@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+  <link rel="preconnect" href="https://fonts.googleapis.com/" />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+  <meta name="title" content="zenly" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" />
+  <meta name="description" content="2014-2023 | au revoir. bisous" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Space+Mono&display=swap');
+  </style>
+</head>
+
+<body style="background-color: black">
+  <div>
+    <div style="display: flex; flex-direction: column; justify-content: center">
+      <h1 style="
+            text-align: center;
+            font-size: 40px;
+            --min-height: auto;
+            --width: 100%;
+            --max-width: 100%;
+          ">
+        <strong><span style="color: white; font-family: 'Inter', sans-serif">Page not found.</span></strong>
+      </h1>
+      <p style="text-align: center; font-size: 16px">
+        <span style="color: white; font-family: 'Space Mono', monospace"><a href="./" style="color: white;">go
+            home</a></span>
+      </p>
+      <p style="text-align: center">
+        <a href="https://www.snapchat.com/" target="_blank"
+          style="color: rgb(138, 143, 152); font-family: 'Space Mono', monospace">enjoyed zenly? try Snap Map on
+          Snapchat</a>
+      </p>
+    </div>
+  </div>
+</body>
+
+</html>
