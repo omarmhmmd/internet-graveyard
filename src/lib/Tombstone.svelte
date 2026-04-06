@@ -47,9 +47,9 @@
     </div>
     {#if name}
       <div style="width:320px;">
-        <div style="width:100%;height:14px;background:linear-gradient(to bottom,#f0f0f0,#d8d8d8);transform:perspective(120px) rotateX(40deg);transform-origin:bottom center;"></div>
-        <div style="background:#e8e8e8;box-shadow:inset 0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;padding:10px 16px 14px;">
-          <p class="pedestal-title" style="margin:4px 0 0 0;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;color:#555;">{name}</p>
+        <div style="width:100%;height:14px;background:linear-gradient(to bottom,#a8a8a8,#888888);transform:perspective(120px) rotateX(40deg);transform-origin:bottom center;"></div>
+        <div style="background:#a0a0a0;box-shadow:inset 0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;padding:10px 16px 14px;">
+          <p class="pedestal-title" style="margin:4px 0 0 0;font-size:20px;font-family:'Playfair Display',serif;font-weight:400;color:#000;">{name}</p>
         </div>
       </div>
     {/if}

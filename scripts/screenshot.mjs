@@ -14,6 +14,7 @@ const sites = data.contents
       : String(block.id);
     return {
       slug,
+      position: block.position,
       name: block.title || block.generated_title || slug,
       url,
       image: block.image.display.url,
@@ -25,4 +26,4 @@ writeFileSync(
   'src/lib/sites.ts',
   `export const sites = ${JSON.stringify(sites, null, 2)} as const;\n`
 );
-console.log(`✓ wrote src/lib/sites.ts (${sites.length} sites)`);
+console.log(`✓ wrote src/lib/sites.ts (${sites.length} sites, sorted by Are.na position)`);
