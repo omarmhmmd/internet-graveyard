@@ -6,6 +6,7 @@
     look = 'default',
     bg = '#D3D3D3',
     name = '',
+    radius: radiusProp,
   }: {
     image?: string;
     favicon?: string;
@@ -13,6 +14,7 @@
     look?: 'default' | 'float' | 'stamp' | 'dark' | 'tinted' | 'sunken';
     bg?: string;
     name?: string;
+    radius?: number;
   } = $props();
 
   const looks: Record<string, { wrapper: string; imgFilter: string; imgInset: string; }> = {
@@ -26,7 +28,7 @@
 
   const l = looks[look] ?? looks.default;
   const faviconStyle = look === 'dark' ? 'filter:invert(1);' : '';
-  const radius = Math.round(60 + Math.random() * 70);
+  const radius = radiusProp ?? Math.round(60 + Math.random() * 70);
 </script>
 
 {#if variant === 2}
@@ -49,7 +51,7 @@
       <div style="width:320px;">
         <div style="width:100%;height:14px;background:linear-gradient(to bottom,#a8a8a8,#888888);transform:perspective(120px) rotateX(40deg);transform-origin:bottom center;"></div>
         <div style="background:#a0a0a0;box-shadow:inset 0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;padding:10px 16px 14px;">
-          <p class="pedestal-title" style="margin:4px 0 0 0;font-size:20px;font-family:'Playfair Display',serif;font-weight:400;color:#000;">{name}</p>
+          <p class="pedestal-title" style="margin:4px 0 0 0;font-size:24px;font-family:'Cinzel',serif;font-weight:400;color:#333;">{name}</p>
         </div>
       </div>
     {/if}
