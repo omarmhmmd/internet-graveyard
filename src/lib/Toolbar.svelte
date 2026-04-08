@@ -1,6 +1,7 @@
 <script lang="ts">
   import { useSvelteFlow, Panel } from '@xyflow/svelte';
   import { nodesStore, sitesStore, buildNodesFromSites, imageOverrides } from './nodesStore';
+  import { activeTool } from './toolStore';
   import { get } from 'svelte/store';
 
   const { zoomIn, zoomOut, setCenter } = useSvelteFlow();
@@ -28,10 +29,13 @@
     if (active === 'bury' && !buryClosing) {
       buryClosing = true;
       active = null;
+      activeTool.set(null);
       pendingTool = tool === 'bury' ? null : tool;
       return;
     }
-    active = active === tool ? null : tool;
+    const next = active === tool ? null : tool;
+    active = next;
+    activeTool.set(next === 'bury' ? null : next);
     if (tool !== 'bury') buryUrl = '';
   }
 
@@ -41,6 +45,7 @@
       buryUrl = '';
       if (pendingTool) {
         active = pendingTool;
+        activeTool.set(pendingTool);
         pendingTool = null;
       }
     }
