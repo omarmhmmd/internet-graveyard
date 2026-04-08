@@ -11,6 +11,9 @@ export interface Site {
 
 export const sitesStore = writable<Site[]>([]);
 
+// Direct image overrides — bypasses SvelteFlow prop propagation
+export const imageOverrides = writable<Record<string, string>>({});
+
 // ── Layout constants (must match App.svelte) ──────────────────────────────────
 const CARD_W = 340;
 const CELL_W = 1200;

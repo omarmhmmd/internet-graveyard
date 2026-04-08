@@ -1,6 +1,6 @@
 <script lang="ts">
   import { useSvelteFlow, Panel } from '@xyflow/svelte';
-  import { nodesStore, sitesStore, buildNodesFromSites } from './nodesStore';
+  import { nodesStore, sitesStore, buildNodesFromSites, imageOverrides } from './nodesStore';
   import { get } from 'svelte/store';
 
   const { zoomIn, zoomOut } = useSvelteFlow();
@@ -8,7 +8,7 @@
   let active = $state<string | null>(null);
   let buryUrl = $state('');
   let buryClosing = $state(false);
-  let buryStatus = $state<'idle' | 'loading' | 'success'>('idle');
+  let buryStatus = $state<'idle' | 'loading'>('idle');
 
   function select(tool: string) {
     if (tool === 'bury' && active === 'bury' && !buryClosing) {
@@ -28,7 +28,7 @@
   }
 
   async function pollForImage(blockId: number, nodeId: string) {
-    const MAX = 12;
+    const MAX = 20;
     const INTERVAL = 4000;
     for (let i = 0; i < MAX; i++) {
       await new Promise(r => setTimeout(r, INTERVAL));
@@ -37,13 +37,12 @@
           headers: { 'Authorization': `Bearer ${import.meta.env.VITE_ARENA_TOKEN}` },
         });
         const block = await res.json();
-        if (block.image?.display?.url) {
-          nodesStore.update(nodes => nodes.map(n =>
-            n.id === nodeId ? { ...n, data: { ...n.data, image: block.image.display.url } } : n
-          ));
+        const url = block.image?.large?.src ?? block.image?.medium?.src ?? block.image?.small?.src;
+        if (url) {
+          imageOverrides.update(o => ({ ...o, [nodeId]: url }));
           return;
         }
-      } catch {}
+      } catch (e) { console.error('[poll error]', e); }
     }
   }
 
@@ -73,22 +72,22 @@
       if (!res.ok) throw new Error(`Are.na error: ${res.status}`);
 
       const [block] = await Promise.all([res.json(), new Promise(r => setTimeout(r, 2500))]);
-      buryStatus = 'success';
-      setTimeout(() => { buryStatus = 'idle'; }, 2000);
+      buryStatus = 'idle';
 
-      // Append placeholder site and rebuild nodes at the correct deterministic position
-      const newSite = { url, image: '/weights.png', favicon: '' };
+      const image = block.image?.large?.src ?? block.image?.medium?.src ?? block.image?.small?.src ?? '';
+      const newSite = { url, image, favicon: '' };
       sitesStore.update(sites => {
         const updated = [...sites, newSite];
-        nodesStore.set(buildNodesFromSites(updated));
+        const nodes = buildNodesFromSites(updated);
+        const freshId = String(updated.length - 1);
+        nodesStore.set(nodes.map(n => n.id === freshId ? { ...n, data: { ...n.data, fresh: true } } : n));
         return updated;
       });
 
-      // nodeId is the last tombstone index (sites.length - 1 after append)
-      const nodeId = String(get(sitesStore).length - 1);
-
-      // Poll until Are.na finishes processing the screenshot, then swap image
-      pollForImage(block.id, nodeId);
+      if (!image) {
+        const nodeId = String(get(sitesStore).length - 1);
+        pollForImage(block.id, nodeId);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -102,17 +101,11 @@
 
       <!-- Bury: shovel -->
       <div class="tip-wrap">
-        <button class="tool-btn action-btn" class:active={active === 'bury'} class:status-loading={buryStatus === 'loading'} class:status-success={buryStatus === 'success'} onclick={() => select('bury')}>
-          {#if buryStatus === 'loading'}
-            <svg class="spin" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke-dasharray="28 56" /></svg>
-          {:else if buryStatus === 'success'}
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline class="check-draw" points="20 6 9 17 4 12"/></svg>
-          {:else}
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 23v-7l6.5-6.5 7 7-6.5 6.5z"/>
-              <line x1="7.5" y1="16" x2="20" y2="3"/>
-            </svg>
-          {/if}
+        <button class="tool-btn action-btn" class:active={active === 'bury'} class:status-loading={buryStatus === 'loading'} onclick={() => select('bury')}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 23v-7l6.5-6.5 7 7-6.5 6.5z"/>
+            <line x1="7.5" y1="16" x2="20" y2="3"/>
+          </svg>
         </button>
         {#if active === 'bury' || buryClosing}
           <form class="bury-popover" class:closing={buryClosing} onanimationend={onPopoverAnimEnd} onsubmit={submitBury}>
@@ -261,42 +254,13 @@
     gap: 2px;
   }
 
-  .status-success svg {
-    animation: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
   .status-loading {
-    color: rgba(255,255,255,0.4) !important;
+    animation: shovel-pulse 1s ease-in-out infinite;
   }
 
-  .status-success {
-    color: #5a5a22 !important;
-  }
-
-  .spin {
-    animation: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-               spin 0.8s linear 0.3s infinite;
-    opacity: 0;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
-  .check-draw {
-    stroke-dasharray: 30;
-    stroke-dashoffset: 30;
-    animation: draw-check 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @keyframes draw-check {
-    to { stroke-dashoffset: 0; }
+  @keyframes shovel-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
   }
 
   .bury-popover {

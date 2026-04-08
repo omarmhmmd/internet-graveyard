@@ -29,6 +29,20 @@
   const l = looks[look] ?? looks.default;
   const faviconStyle = look === 'dark' ? 'filter:invert(1);' : '';
   const radius = radiusProp ?? Math.round(60 + Math.random() * 70);
+
+  let imgEl = $state<HTMLImageElement | null>(null);
+
+  $effect(() => {
+    if (imgEl) imgEl.style.opacity = '0';
+  });
+
+  function onImgLoad(e: Event) {
+    const el = e.currentTarget as HTMLImageElement;
+    el.style.transition = 'opacity 1.4s ease';
+    el.style.opacity = '1';
+    const container = el.closest('.skeleton') as HTMLElement | null;
+    if (container) setTimeout(() => { container.style.animation = 'none'; }, 1400);
+  }
 </script>
 
 {#if variant === 2}
@@ -37,14 +51,16 @@
       <img src={favicon} alt="" style="width:22px;height:22px;{faviconStyle}" />
     </div>
     <div class="absolute bottom-0 left-0 right-0 overflow-hidden" style="height:376px;">
-      <img src={image} alt="" class="w-full h-full" style="object-fit:cover;object-position:top;filter:{l.imgFilter};" />
+      <img src={displayImage} alt="" class="w-full h-full" class:img-fade-in={fadeIn} style="object-fit:cover;object-position:top;filter:{l.imgFilter};" />
     </div>
   </div>
 
 {:else if variant === 4}
   <div class="card flex flex-col items-center">
-    <div class="relative overflow-hidden" style="width:260px;height:340px;border-radius:{radius}px {radius}px 0 0;margin-bottom:-8px;position:relative;z-index:1;border-bottom:1px solid rgba(0,0,0,0.08);">
-      <img src={image} alt="" class="absolute inset-0 w-full h-full" style="object-fit:cover;object-position:top;filter:{l.imgFilter};" />
+    <div class="relative overflow-hidden skeleton" style="width:260px;height:340px;border-radius:{radius}px {radius}px 0 0;margin-bottom:-8px;position:relative;z-index:1;border-bottom:1px solid rgba(0,0,0,0.08);">
+      {#if image}
+        <img bind:this={imgEl} src={image} alt="" onload={onImgLoad} class="absolute inset-0 w-full h-full" style="opacity:0;object-fit:cover;object-position:top;filter:{l.imgFilter};" />
+      {/if}
       <div class="absolute inset-0" style="border-radius:{radius}px {radius}px 0 0;{l.wrapper};pointer-events:none;"></div>
     </div>
     {#if name}
@@ -65,5 +81,13 @@
   }
   .card:hover .pedestal-title {
     opacity: 1;
+  }
+  .skeleton {
+    background: #c4c4c4;
+    animation: skeleton-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
   }
 </style>
