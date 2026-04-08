@@ -73,6 +73,7 @@ export function buildNodesFromSites(sites: Site[]): Node[] {
       data: {
         image: site.image,
         favicon: site.favicon ?? '',
+        url: site.url,
         name: site.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0],
         radius: Math.round(60 + r() * 70),
       },

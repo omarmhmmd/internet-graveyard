@@ -3,16 +3,32 @@
   import { nodesStore, sitesStore, buildNodesFromSites, imageOverrides } from './nodesStore';
   import { get } from 'svelte/store';
 
-  const { zoomIn, zoomOut } = useSvelteFlow();
+  const { zoomIn, zoomOut, setCenter } = useSvelteFlow();
 
   let active = $state<string | null>(null);
   let buryUrl = $state('');
   let buryClosing = $state(false);
   let buryStatus = $state<'idle' | 'loading'>('idle');
+  let buryWrap = $state<HTMLElement | null>(null);
+  let pendingTool = $state<string | null>(null);
+
+  $effect(() => {
+    if (active !== 'bury') return;
+    function onDocClick(e: MouseEvent) {
+      if (buryWrap && !buryWrap.contains(e.target as Node) && !buryClosing) {
+        buryClosing = true;
+        active = null;
+      }
+    }
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  });
 
   function select(tool: string) {
-    if (tool === 'bury' && active === 'bury' && !buryClosing) {
+    if (active === 'bury' && !buryClosing) {
       buryClosing = true;
+      active = null;
+      pendingTool = tool === 'bury' ? null : tool;
       return;
     }
     active = active === tool ? null : tool;
@@ -21,9 +37,12 @@
 
   function onPopoverAnimEnd() {
     if (buryClosing) {
-      active = null;
       buryClosing = false;
       buryUrl = '';
+      if (pendingTool) {
+        active = pendingTool;
+        pendingTool = null;
+      }
     }
   }
 
@@ -84,9 +103,14 @@
         return updated;
       });
 
+      const newNodeId = String(get(sitesStore).length - 1);
+      const newNode = get(nodesStore).find(n => n.id === newNodeId);
+      if (newNode) {
+        setCenter(newNode.position.x + 130, newNode.position.y + 170, { duration: 900 });
+      }
+
       if (!image) {
-        const nodeId = String(get(sitesStore).length - 1);
-        pollForImage(block.id, nodeId);
+        pollForImage(block.id, newNodeId);
       }
     } catch (err) {
       console.error(err);
@@ -100,11 +124,11 @@
     <div class="action-group">
 
       <!-- Bury: shovel -->
-      <div class="tip-wrap">
+      <div class="tip-wrap" bind:this={buryWrap}>
         <button class="tool-btn action-btn" class:active={active === 'bury'} class:status-loading={buryStatus === 'loading'} onclick={() => select('bury')}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 23v-7l6.5-6.5 7 7-6.5 6.5z"/>
-            <line x1="7.5" y1="16" x2="20" y2="3"/>
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.16667" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1.99963 24L1.8371 22.8178C1.35531 19.3137 2.32215 15.7645 4.51465 12.9889L7.5 9.20959L16.5 18.667L13.0231 21.4408C10.241 23.6603 6.67071 24.6422 3.14497 24.1574L1.99963 24Z"/>
+            <path d="M12 13.4167L23.4167 2"/>
           </svg>
         </button>
         {#if active === 'bury' || buryClosing}
@@ -182,6 +206,7 @@
     border-radius: 10px;
     padding: 5px;
     margin-bottom: 20px;
+    transform: translateX(48px);
   }
 
   .tip-wrap {
