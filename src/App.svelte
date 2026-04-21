@@ -15,7 +15,7 @@
   const nodeTypes = { tombstone: TombstoneNode, title: TitleNode, grass: GrassNode, flower: FlowerNode };
 
   // Fetch Are.na channel on every load
-  fetch('https://api.are.na/v2/channels/internet-graveyard?per=100')
+  fetch('https://api.are.na/v2/channels/internet-graveyard?per=100', { cache: 'no-store' })
     .then(r => r.json())
     .then(data => {
       const sites = data.contents
