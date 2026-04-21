@@ -292,13 +292,18 @@
     opacity: 0;
     transition:
       grid-template-columns 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 0.25s ease;
+      opacity 0.2s ease-out;
     overflow: hidden;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    margin-left: 4px;
   }
 
   .bury-inline.open {
     grid-template-columns: 1fr;
     opacity: 1;
+    transition:
+      grid-template-columns 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.25s ease-in;
   }
 
   .bury-inline.closing {
@@ -310,7 +315,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    padding-left: 4px;
+    padding: 0 6px 0 8px;
     min-width: 0;
   }
 
