@@ -19,7 +19,7 @@
     timeout = setTimeout(() => { hovered = false; }, 150);
   }
 
-  const { setCenter } = useSvelteFlow();
+  const { fitView } = useSvelteFlow();
   const CARD_W = 260;
   const CARD_H = 340;
 
@@ -71,7 +71,7 @@
         return false;
       });
 
-    if (!candidates.length) return;
+    if (!candidates.length) { checkRattle(direction); return; }
 
     const nearest = candidates.reduce((best, n) => {
       const dist  = Math.hypot(n.position.x + CARD_W / 2 - myX, n.position.y + CARD_H / 2 - myY);
@@ -79,7 +79,7 @@
       return dist < bdist ? n : best;
     });
 
-    setCenter(nearest.position.x + CARD_W / 2, nearest.position.y + CARD_H / 2, { duration: 700 });
+    fitView({ nodes: [{ id: nearest.id }], padding: 0.15, duration: 700, maxZoom: 1.25 });
   }
 </script>
 
@@ -90,13 +90,14 @@
       favicon={data.favicon}
       name={data.name}
       radius={data.radius}
+      shape={data.shape}
       variant={4}
       look="sunken"
       bg="#FFFFFF"
     />
   </div>
 
-  <div class="nav-cluster" class:visible={hovered} onmouseenter={enter} onmouseleave={leave} onclick={(e) => e.stopPropagation()}>
+  <div class="nav-cluster" class:visible={hovered} onmouseenter={enter} onclick={(e) => e.stopPropagation()}>
     <button class="nav-btn up"    class:rattle={rattling.has('up')}    class:can-move={available.has('up')}    onmouseenter={() => checkRattle('up')}    onclick={(e) => navigateTo('up', e)}>
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
     </button>
@@ -129,9 +130,9 @@
 
   .nav-cluster {
     position: absolute;
-    top: -100px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(8px);
+    transform: translate(-50%, -50%) scale(0.9);
     opacity: 0;
     pointer-events: none;
     display: grid;
@@ -139,12 +140,13 @@
     grid-template-columns: 28px 28px 28px;
     grid-template-rows: 28px 28px 28px;
     gap: 3px;
+    z-index: 10;
     transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .nav-cluster.visible {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translate(-50%, -50%) scale(1);
     pointer-events: all;
   }
 

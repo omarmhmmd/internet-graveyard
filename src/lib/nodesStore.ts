@@ -63,6 +63,7 @@ export function buildNodesFromSites(sites: Site[]): Node[] {
     const cell = availableCells[i % availableCells.length];
     const jitterX = r() * (CELL_W - CARD_W);
     const jitterY = r() * (CELL_H - 460);
+    const radius = Math.round(60 + r() * 70);
     return {
       id: String(i),
       type: 'tombstone',
@@ -75,7 +76,8 @@ export function buildNodesFromSites(sites: Site[]): Node[] {
         favicon: site.favicon ?? '',
         url: site.url,
         name: site.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0],
-        radius: Math.round(60 + r() * 70),
+        radius,
+        shape: radius % 8,
       },
       draggable: false,
       selectable: false,

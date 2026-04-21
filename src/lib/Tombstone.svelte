@@ -7,6 +7,7 @@
     bg = '#D3D3D3',
     name = '',
     radius: radiusProp,
+    shape = 0,
   }: {
     image?: string;
     favicon?: string;
@@ -15,6 +16,7 @@
     bg?: string;
     name?: string;
     radius?: number;
+    shape?: number;
   } = $props();
 
   const looks: Record<string, { wrapper: string; imgFilter: string; imgInset: string; }> = {
@@ -30,6 +32,31 @@
   const faviconStyle = look === 'dark' ? 'filter:invert(1);' : '';
   const radius = radiusProp ?? Math.round(60 + Math.random() * 70);
 
+  // ── Shape definitions (W=260, H=340) ──────────────────────────────────────
+  const W = 260, H = 340;
+
+  const SHAPES: string[] = [
+    // 0: Classic arch
+    `M0,340 L0,130 Q0,0 130,0 Q260,0 260,130 L260,340 Z`,
+    // 1: Gothic pointed arch
+    `M0,340 L0,211 C0,82 86,0 130,0 C174,0 260,82 260,211 L260,340 Z`,
+    // 2: Obelisk / pyramid top
+    `M0,340 L29,44 L130,0 L231,44 L260,340 Z`,
+    // 3: Tablet — flat top, rounded corners
+    `M0,340 L0,40 Q0,0 40,0 L220,0 Q260,0 260,40 L260,340 Z`,
+    // 4: Trefoil — three organic bumps
+    `M0,340 L0,224 C5,163 25,146 68,139 C38,102 35,54 70,34 C80,7 112,0 130,0 C148,0 180,7 190,34 C225,54 222,102 192,139 C235,146 255,163 260,224 L260,340 Z`,
+    // 5: Jagged / broken stone
+    `M0,340 L0,156 L21,133 L42,167 L62,105 L88,140 L114,82 L130,92 L148,61 L174,126 L200,88 L226,119 L244,95 L260,150 L260,340 Z`,
+    // 6: Art Deco stepped
+    `M0,340 L0,119 L31,119 L31,82 L70,82 L70,44 L99,44 L99,20 L161,20 L161,44 L190,44 L190,82 L229,82 L229,119 L260,119 L260,340 Z`,
+    // 7: Victorian urn — concave sides
+    `M0,340 C20,289 5,238 15,194 C5,167 5,109 0,82 Q0,0 130,0 Q260,0 260,82 C255,109 255,167 245,194 C255,238 240,289 260,340 Z`,
+  ];
+
+  const shapePath = SHAPES[(shape ?? 0) % SHAPES.length];
+
+  let stoneEl = $state<HTMLElement | null>(null);
   let imgEl = $state<HTMLImageElement | null>(null);
 
   $effect(() => {
@@ -40,8 +67,7 @@
     const el = e.currentTarget as HTMLImageElement;
     el.style.transition = 'opacity 1.4s ease';
     el.style.opacity = '1';
-    const container = el.closest('.skeleton') as HTMLElement | null;
-    if (container) setTimeout(() => { container.style.animation = 'none'; }, 1400);
+    if (stoneEl) setTimeout(() => { if (stoneEl) stoneEl.style.animation = 'none'; }, 1400);
   }
 </script>
 
@@ -51,17 +77,33 @@
       <img src={favicon} alt="" style="width:22px;height:22px;{faviconStyle}" />
     </div>
     <div class="absolute bottom-0 left-0 right-0 overflow-hidden" style="height:376px;">
-      <img src={displayImage} alt="" class="w-full h-full" class:img-fade-in={fadeIn} style="object-fit:cover;object-position:top;filter:{l.imgFilter};" />
+      <img src={image} alt="" class="w-full h-full" style="object-fit:cover;object-position:top;filter:{l.imgFilter};" />
     </div>
   </div>
 
 {:else if variant === 4}
   <div class="card flex flex-col items-center">
-    <div class="relative overflow-hidden skeleton" style="width:260px;height:340px;border-radius:{radius}px {radius}px 0 0;margin-bottom:-8px;position:relative;z-index:1;border-bottom:1px solid rgba(0,0,0,0.08);">
-      {#if image}
-        <img bind:this={imgEl} src={image} alt="" onload={onImgLoad} class="absolute inset-0 w-full h-full" style="opacity:0;object-fit:cover;object-position:top;filter:{l.imgFilter};" />
-      {/if}
-      <div class="absolute inset-0" style="border-radius:{radius}px {radius}px 0 0;{l.wrapper};pointer-events:none;"></div>
+    <div style="position:relative;margin-bottom:-8px;z-index:1;">
+      <!-- Clipped stone -->
+      <div
+        bind:this={stoneEl}
+        class="skeleton"
+        style="width:{W}px;height:{H}px;clip-path:path('{shapePath}');position:relative;background:#c4c4c4;"
+      >
+        {#if image}
+          <img
+            bind:this={imgEl}
+            src={image}
+            alt=""
+            onload={onImgLoad}
+            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;filter:{l.imgFilter};"
+          />
+        {/if}
+      </div>
+      <!-- SVG border stroke follows the shape -->
+      <svg width={W} height={H} style="position:absolute;inset:0;pointer-events:none;overflow:visible;">
+        <path d={shapePath} fill="none" stroke="rgba(0,0,0,0.13)" stroke-width="1.5" />
+      </svg>
     </div>
     {#if name}
       <div style="width:320px;">

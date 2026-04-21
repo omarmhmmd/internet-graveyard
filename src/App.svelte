@@ -42,7 +42,7 @@
       id: `flower-${f.id}`,
       type: 'flower' as const,
       position: { x: f.x, y: f.y },
-      data: { emoji: '🌸' },
+      data: { seed: Math.abs(Math.round(f.x * 31 + f.y * 17)) },
       draggable: false,
       selectable: false,
     })),
@@ -83,7 +83,11 @@
 </div>
 
 <style>
+  :global(.svelte-flow__node-flower) {
+    cursor: inherit !important;
+  }
+
   .flowers-mode :global(.svelte-flow__pane) {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='28' font-size='28'>🌸</text></svg>") 16 28, crosshair;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='64' viewBox='0 0 80 110' fill='none'><path d='M40 110 Q31 70 22 30' stroke='%237a8a6a' stroke-width='2' stroke-linecap='round'/><path d='M40 110 Q40 70 40 28' stroke='%237a8a6a' stroke-width='2' stroke-linecap='round'/><path d='M40 110 Q49 71 58 32' stroke='%237a8a6a' stroke-width='2' stroke-linecap='round'/><path d='M40 110 Q29 82 18 55' stroke='%237a8a6a' stroke-width='2' stroke-linecap='round'/><path d='M40 110 Q51 84 62 58' stroke='%237a8a6a' stroke-width='2' stroke-linecap='round'/><ellipse cx='22' cy='23' rx='3.5' ry='6' fill='%23a066cc'/><ellipse cx='22' cy='37' rx='3.5' ry='6' fill='%23a066cc'/><ellipse cx='15' cy='30' rx='6' ry='3.5' fill='%23a066cc'/><ellipse cx='29' cy='30' rx='6' ry='3.5' fill='%23a066cc'/><circle cx='22' cy='30' r='3.5' fill='%23f5e6a0'/><ellipse cx='40' cy='21' rx='3.5' ry='6' fill='%23f09930'/><ellipse cx='40' cy='35' rx='3.5' ry='6' fill='%23f09930'/><ellipse cx='33' cy='28' rx='6' ry='3.5' fill='%23f09930'/><ellipse cx='47' cy='28' rx='6' ry='3.5' fill='%23f09930'/><circle cx='40' cy='28' r='3.5' fill='%23f5e6a0'/><ellipse cx='58' cy='25' rx='3.5' ry='6' fill='%234488ee'/><ellipse cx='58' cy='39' rx='3.5' ry='6' fill='%234488ee'/><ellipse cx='51' cy='32' rx='6' ry='3.5' fill='%234488ee'/><ellipse cx='65' cy='32' rx='6' ry='3.5' fill='%234488ee'/><circle cx='58' cy='32' r='3.5' fill='%23f5e6a0'/><ellipse cx='18' cy='49' rx='3' ry='5' fill='%23dd44aa'/><ellipse cx='18' cy='61' rx='3' ry='5' fill='%23dd44aa'/><ellipse cx='12' cy='55' rx='5' ry='3' fill='%23dd44aa'/><ellipse cx='24' cy='55' rx='5' ry='3' fill='%23dd44aa'/><circle cx='18' cy='55' r='3' fill='%23f5e6a0'/><ellipse cx='62' cy='52' rx='3' ry='5' fill='%2333bbaa'/><ellipse cx='62' cy='64' rx='3' ry='5' fill='%2333bbaa'/><ellipse cx='56' cy='58' rx='5' ry='3' fill='%2333bbaa'/><ellipse cx='68' cy='58' rx='5' ry='3' fill='%2333bbaa'/><circle cx='62' cy='58' r='3' fill='%23f5e6a0'/></svg>") 24 32, crosshair;
   }
 </style>
