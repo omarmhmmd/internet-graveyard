@@ -129,25 +129,26 @@
     <div class="action-group">
 
       <!-- Bury: shovel -->
-      <div class="tip-wrap" bind:this={buryWrap}>
+      <div class="bury-wrap" bind:this={buryWrap}>
         <button class="tool-btn action-btn" class:active={active === 'bury'} class:status-loading={buryStatus === 'loading'} onclick={() => select('bury')}>
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.16667" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
             <path d="M1.99963 24L1.8371 22.8178C1.35531 19.3137 2.32215 15.7645 4.51465 12.9889L7.5 9.20959L16.5 18.667L13.0231 21.4408C10.241 23.6603 6.67071 24.6422 3.14497 24.1574L1.99963 24Z"/>
             <path d="M12 13.4167L23.4167 2"/>
           </svg>
         </button>
-        {#if active === 'bury' || buryClosing}
-          <form class="bury-popover" class:closing={buryClosing} onanimationend={onPopoverAnimEnd} onsubmit={submitBury}>
+        <div class="bury-inline" class:open={active === 'bury'} class:closing={buryClosing} ontransitionend={(e) => { if (e.propertyName === 'grid-template-columns') onPopoverAnimEnd(); }}>
+          <form class="bury-form" onsubmit={submitBury}>
             <input
               class="bury-input"
               type="text"
               placeholder="https://..."
               bind:value={buryUrl}
-              autofocus
+              autofocus={active === 'bury'}
             />
             <button class="bury-submit" type="submit">Bury</button>
           </form>
-        {:else}
+        </div>
+        {#if active !== 'bury' && !buryClosing}
           <span class="tooltip">Bury a website</span>
         {/if}
       </div>
@@ -165,20 +166,6 @@
           </svg>
         </button>
         <span class="tooltip">Place flowers</span>
-      </div>
-      <!-- Eulogy: angled document -->
-      <div class="tip-wrap">
-        <button class="tool-btn action-btn" class:active={active === 'eulogy'} onclick={() => select('eulogy')}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <g transform="rotate(-15 12 12)">
-              <rect x="4" y="2" width="16" height="20" rx="2"/>
-              <line x1="8" y1="9" x2="16" y2="9"/>
-              <line x1="8" y1="13" x2="16" y2="13"/>
-              <line x1="8" y1="17" x2="13" y2="17"/>
-            </g>
-          </svg>
-        </button>
-        <span class="tooltip">Write a eulogy</span>
       </div>
     </div>
 
@@ -212,6 +199,12 @@
     padding: 5px;
     margin-bottom: 20px;
     transform: translateX(48px);
+  }
+
+  .bury-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
   }
 
   .tip-wrap {
@@ -293,34 +286,32 @@
     50%       { opacity: 0.3; }
   }
 
-  .bury-popover {
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%);
+  .bury-inline {
+    display: grid;
+    grid-template-columns: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-columns 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.25s ease;
+    overflow: hidden;
+  }
+
+  .bury-inline.open {
+    grid-template-columns: 1fr;
+    opacity: 1;
+  }
+
+  .bury-inline.closing {
+    grid-template-columns: 0fr;
+    opacity: 0;
+  }
+
+  .bury-form {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: #2e2e2e;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    padding: 6px 8px;
-    animation: popover-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    white-space: nowrap;
-  }
-
-  @keyframes popover-in {
-    from { opacity: 0; transform: translateX(-50%) translateY(6px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-  }
-
-  .bury-popover.closing {
-    animation: popover-out 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @keyframes popover-out {
-    from { opacity: 1; transform: translateX(-50%) translateY(0); }
-    to   { opacity: 0; transform: translateX(-50%) translateY(6px); }
+    gap: 4px;
+    padding-left: 4px;
+    min-width: 0;
   }
 
   .bury-input {
@@ -353,6 +344,7 @@
     font-size: 12px;
     padding: 4px 10px;
     cursor: pointer;
+    white-space: nowrap;
     transition: background 0.15s;
   }
 
