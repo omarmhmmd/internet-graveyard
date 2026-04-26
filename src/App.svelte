@@ -39,6 +39,8 @@
     zoom: INITIAL_ZOOM,
   };
 
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+
   // Load and subscribe to flowers
   loadFlowers();
   subscribeFlowers();
@@ -58,7 +60,8 @@
 </script>
 
 <div style="width:100vw;height:100dvh;position:relative;" class:flowers-mode={$activeTool === 'flowers'}>
-  <!-- Noise texture overlay -->
+  <!-- Noise texture overlay (desktop only — too heavy for mobile Safari) -->
+  {#if !isMobile}
   <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.45;" xmlns="http://www.w3.org/2000/svg">
     <filter id="noise">
       <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" />
@@ -66,6 +69,7 @@
     </filter>
     <rect width="100%" height="100%" filter="url(#noise)" />
   </svg>
+  {/if}
   <SvelteFlow
     nodes={$allNodes}
     {nodeTypes}
@@ -79,12 +83,14 @@
     edges={[]}
     style="background:#d4d4d4;"
   >
+    {#if !isMobile}
     <MiniMap
       position="bottom-right"
       nodeColor="#888"
       maskColor="rgba(30,30,30,0.7)"
       style="background:rgba(30,30,30,0.92);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"
     />
+    {/if}
     <Toolbar />
     <FlowerPlacer />
   </SvelteFlow>
