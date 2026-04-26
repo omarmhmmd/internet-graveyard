@@ -11,6 +11,7 @@
   import { nodesStore, sitesStore, buildNodesFromSites, TITLE_X, TITLE_Y } from './lib/nodesStore';
   import { activeTool } from './lib/toolStore';
   import { flowersStore, loadFlowers, subscribeFlowers } from './lib/flowersStore';
+  import OnlineWidget from './lib/OnlineWidget.svelte';
 
   const nodeTypes = { tombstone: TombstoneNode, title: TitleNode, grass: GrassNode, flower: FlowerNode };
 
@@ -94,6 +95,8 @@
     <FlowerPlacer />
   </SvelteFlow>
 </div>
+
+<OnlineWidget />
 
 <style>
   :global(.svelte-flow__node-flower) {
