@@ -91,7 +91,7 @@
       style="background:rgba(30,30,30,0.92);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"
     />
     {/if}
-    <Toolbar />
+    {#if !isMobile}<Toolbar />{/if}
     <FlowerPlacer />
   </SvelteFlow>
 </div>
