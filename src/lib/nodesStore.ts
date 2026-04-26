@@ -58,7 +58,7 @@ const titleNode: Node = {
   selectable: false,
 };
 
-export function buildNodesFromSites(sites: Site[]): Node[] {
+export function buildNodesFromSites(sites: Site[], includeGrass = true): Node[] {
   const r = mulberry32(0xdeadbeef);
 
   const tombstones: Node[] = sites.map((site, i) => {
@@ -84,7 +84,7 @@ export function buildNodesFromSites(sites: Site[]): Node[] {
     };
   });
 
-  const grass: Node[] = tombstones.flatMap((node, i) => {
+  const grass: Node[] = !includeGrass ? [] : tombstones.flatMap((node, i) => {
     const patches = 6 + Math.floor(r() * 6);
     return Array.from({ length: patches }, (_, j) => {
       const angle = r() * Math.PI * 2;

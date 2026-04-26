@@ -60,8 +60,7 @@
 </script>
 
 <div style="width:100vw;height:100dvh;position:relative;" class:flowers-mode={$activeTool === 'flowers'}>
-  <!-- Noise texture overlay (desktop only — too heavy for mobile Safari) -->
-  {#if !isMobile}
+  <!-- Noise texture overlay -->
   <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.45;" xmlns="http://www.w3.org/2000/svg">
     <filter id="noise">
       <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" />
@@ -69,7 +68,6 @@
     </filter>
     <rect width="100%" height="100%" filter="url(#noise)" />
   </svg>
-  {/if}
   <SvelteFlow
     nodes={$allNodes}
     {nodeTypes}

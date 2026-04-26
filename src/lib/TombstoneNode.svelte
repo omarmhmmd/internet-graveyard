@@ -5,6 +5,7 @@
   import { get } from 'svelte/store';
 
   let { data, id }: NodeProps = $props();
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
   let hovered = $state(false);
   let timeout: ReturnType<typeof setTimeout> | null = null;
   let rattling = $state<Set<string>>(new Set());
@@ -83,7 +84,7 @@
   }
 </script>
 
-<div class="node-wrap" onmouseenter={enter} onmouseleave={leave} onclick={() => { console.log('click', data.url); if (data.url) window.open(data.url as string, '_blank'); }}>
+<div class="node-wrap" onmouseenter={enter} onmouseleave={leave} onclick={() => { if (!isMobile && data.url) window.open(data.url as string, '_blank'); }}>
   <div class:bury-in={data.fresh}>
     <Tombstone
       image={$imageOverrides[id] ?? data.image}
@@ -96,7 +97,7 @@
     />
   </div>
 
-  <div class="nav-cluster" class:visible={hovered} onmouseenter={enter} onclick={(e) => e.stopPropagation()}>
+  <div class="nav-cluster" class:visible={hovered || isMobile} onmouseenter={enter} onclick={(e) => e.stopPropagation()}>
     <button class="nav-btn up"    class:rattle={rattling.has('up')}    class:can-move={available.has('up')}    onmouseenter={() => checkRattle('up')}    onclick={(e) => navigateTo('up', e)}>
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
     </button>
@@ -143,6 +144,14 @@
     transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  @media (max-width: 768px) {
+    .nav-cluster {
+      grid-template-columns: 36px 36px 36px;
+      grid-template-rows: 36px 36px 36px;
+      gap: 4px;
+    }
+  }
+
   .nav-cluster.visible {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -153,7 +162,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #a0a0a0;
+    background: linear-gradient(160deg, #c0c0c0 0%, #888 100%);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.3);
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -194,7 +204,8 @@
 
   .nav-center {
     grid-area: center;
-    background: #a0a0a0;
+    background: linear-gradient(160deg, #c0c0c0 0%, #888 100%);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.3);
     border: none;
     border-radius: 6px;
     pointer-events: none;

@@ -112,7 +112,8 @@
       const newSite = { url, image, favicon: '' };
       sitesStore.update(sites => {
         const updated = [...sites, newSite];
-        const nodes = buildNodesFromSites(updated);
+        const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+        const nodes = buildNodesFromSites(updated, !mobile);
         const freshId = String(updated.length - 1);
         nodesStore.set(nodes.map(n => n.id === freshId ? { ...n, data: { ...n.data, fresh: true } } : n));
         return updated;

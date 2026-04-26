@@ -28,6 +28,7 @@
 
   const l = looks[look] ?? looks.default;
   const faviconStyle = look === 'dark' ? 'filter:invert(1);' : '';
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
 
   // ── Shape definitions (W=260, H=340) ─────────────────────────────────────
   const W = 260, H = 340;
@@ -79,28 +80,40 @@
 {:else if variant === 4}
   <div class="card flex flex-col items-center">
     <div style="position:relative;margin-bottom:-8px;z-index:1;">
-      <div
-        bind:this={stoneEl}
-        class="skeleton"
-        style="width:{W}px;height:{H}px;clip-path:path('{shapePath}');position:relative;background:#c4c4c4;"
-      >
-        {#if image}
-          <img
-            bind:this={imgEl}
-            src={image}
-            alt=""
-            onload={onImgLoad}
-            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;filter:{l.imgFilter};"
-          />
-        {/if}
-      </div>
-      <svg width={W} height={H} style="position:absolute;inset:0;pointer-events:none;overflow:visible;">
-        <path d={shapePath} fill="none" stroke="rgba(0,0,0,0.13)" stroke-width="1.5" />
-      </svg>
+      {#if isMobile}
+        <div
+          bind:this={stoneEl}
+          style="width:{W}px;height:{H}px;border-radius:130px 130px 0 0;overflow:hidden;position:relative;background:#c4c4c4;"
+        >
+          {#if image}
+            <img bind:this={imgEl} src={image} alt="" onload={onImgLoad}
+              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;filter:{l.imgFilter};" />
+          {/if}
+        </div>
+      {:else}
+        <div
+          bind:this={stoneEl}
+          class="skeleton"
+          style="width:{W}px;height:{H}px;clip-path:path('{shapePath}');position:relative;background:#c4c4c4;"
+        >
+          {#if image}
+            <img
+              bind:this={imgEl}
+              src={image}
+              alt=""
+              onload={onImgLoad}
+              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;filter:{l.imgFilter};"
+            />
+          {/if}
+        </div>
+        <svg width={W} height={H} style="position:absolute;inset:0;pointer-events:none;overflow:visible;">
+          <path d={shapePath} fill="none" stroke="rgba(0,0,0,0.13)" stroke-width="1.5" />
+        </svg>
+      {/if}
     </div>
     {#if name}
       <div style="width:320px;">
-        <div style="width:100%;height:14px;background:linear-gradient(to bottom,#a8a8a8,#888888);transform:perspective(120px) rotateX(40deg);transform-origin:bottom center;"></div>
+        <div style="width:100%;height:14px;background:linear-gradient(to bottom,#a8a8a8,#888888);{isMobile ? '' : 'transform:perspective(120px) rotateX(40deg);transform-origin:bottom center;'}"></div>
         <div style="background:#a0a0a0;box-shadow:inset 0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;padding:10px 16px 14px;">
           <p class="pedestal-title" style="margin:4px 0 0 0;font-size:24px;font-family:'Cinzel',serif;font-weight:400;color:#333;">{name}</p>
         </div>
@@ -116,6 +129,11 @@
   }
   .card:hover .pedestal-title {
     opacity: 1;
+  }
+  @media (max-width: 768px) {
+    .pedestal-title {
+      opacity: 1;
+    }
   }
   .skeleton {
     background: #c4c4c4;
