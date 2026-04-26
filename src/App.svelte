@@ -57,7 +57,7 @@
   ]);
 </script>
 
-<div style="width:100vw;height:100vh;position:relative;" class:flowers-mode={$activeTool === 'flowers'}>
+<div style="width:100vw;height:100dvh;position:relative;" class:flowers-mode={$activeTool === 'flowers'}>
   <!-- Noise texture overlay -->
   <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.45;" xmlns="http://www.w3.org/2000/svg">
     <filter id="noise">
@@ -72,6 +72,7 @@
     minZoom={0.1}
     maxZoom={2}
     zoomOnScroll={true}
+    zoomOnPinch={true}
     panOnScroll={false}
     panOnDrag={$activeTool !== 'flowers'}
     {initialViewport}
