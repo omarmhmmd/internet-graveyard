@@ -99,6 +99,12 @@
 <OnlineWidget />
 
 <style>
+  :global(.svelte-flow__panel.bottom-center),
+  :global(.svelte-flow__panel.bottom-right),
+  :global(.svelte-flow__panel.bottom-left) {
+    margin-bottom: 24px !important;
+  }
+
   :global(.svelte-flow__node-flower) {
     cursor: inherit !important;
   }

@@ -249,7 +249,7 @@
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
     padding: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
 
   .bury-wrap {

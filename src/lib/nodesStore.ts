@@ -59,7 +59,7 @@ const titleNode: Node = {
 };
 
 export function buildNodesFromSites(sites: Site[], includeGrass = true): Node[] {
-  const r = mulberry32(0xdeadbeef);
+  const r = mulberry32(0xc0ffee42);
 
   const tombstones: Node[] = sites.map((site, i) => {
     const cell = availableCells[i % availableCells.length];

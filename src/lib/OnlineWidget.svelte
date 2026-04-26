@@ -21,7 +21,7 @@
 <style>
   .widget {
     position: fixed;
-    bottom: 42px;
+    bottom: 16px;
     left: 24px;
     display: flex;
     align-items: center;
