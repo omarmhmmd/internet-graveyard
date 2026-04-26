@@ -79,6 +79,7 @@
     panOnDrag={$activeTool !== 'flowers'}
     {initialViewport}
     edges={[]}
+    proOptions={{ hideAttribution: true }}
     style="background:#d4d4d4;"
   >
     {#if !isMobile}
