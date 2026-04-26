@@ -7,6 +7,7 @@
     bg = '#D3D3D3',
     name = '',
     shape = 0,
+    url = '',
   }: {
     image?: string;
     favicon?: string;
@@ -15,6 +16,7 @@
     bg?: string;
     name?: string;
     shape?: number;
+    url?: string;
   } = $props();
 
   const looks: Record<string, { wrapper: string; imgFilter: string; imgInset: string; }> = {
@@ -115,7 +117,11 @@
       <div style="width:320px;">
         <div style="width:100%;height:14px;background:linear-gradient(to bottom,#a8a8a8,#888888);{isMobile ? '' : 'transform:perspective(120px) rotateX(40deg);transform-origin:bottom center;'}"></div>
         <div style="background:#a0a0a0;box-shadow:inset 0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;padding:10px 16px 14px;">
-          <p class="pedestal-title" style="margin:4px 0 0 0;font-size:24px;font-family:'Cinzel',serif;font-weight:400;color:#333;">{name}</p>
+          {#if isMobile && url}
+            <a href={url} target="_blank" rel="noopener" class="pedestal-title" style="margin:4px 0 0 0;font-size:24px;font-family:'Cinzel',serif;font-weight:400;color:#333;text-decoration:underline;text-underline-offset:3px;">{name}</a>
+          {:else}
+            <p class="pedestal-title" style="margin:4px 0 0 0;font-size:24px;font-family:'Cinzel',serif;font-weight:400;color:#333;">{name}</p>
+          {/if}
         </div>
       </div>
     {/if}
