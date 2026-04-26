@@ -8,7 +8,7 @@
   import FlowerNode from './lib/FlowerNode.svelte';
   import FlowerPlacer from './lib/FlowerPlacer.svelte';
   import Toolbar from './lib/Toolbar.svelte';
-  import { nodesStore, sitesStore, buildNodesFromSites } from './lib/nodesStore';
+  import { nodesStore, sitesStore, buildNodesFromSites, TITLE_X, TITLE_Y } from './lib/nodesStore';
   import { activeTool } from './lib/toolStore';
   import { flowersStore, loadFlowers, subscribeFlowers } from './lib/flowersStore';
 
@@ -30,6 +30,14 @@
       nodesStore.set(buildNodesFromSites(sites));
     })
     .catch(console.error);
+
+  const INITIAL_ZOOM = 0.1;
+  // TITLE_Y is the node's top edge; add ~400px to land on the heading text
+  const initialViewport = {
+    x: window.innerWidth / 2 - TITLE_X * INITIAL_ZOOM,
+    y: window.innerHeight / 2 - (TITLE_Y + 400) * INITIAL_ZOOM,
+    zoom: INITIAL_ZOOM,
+  };
 
   // Load and subscribe to flowers
   loadFlowers();
@@ -66,8 +74,7 @@
     zoomOnScroll={true}
     panOnScroll={false}
     panOnDrag={$activeTool !== 'flowers'}
-    fitView={true}
-    fitViewOptions={{ padding: 0.1 }}
+    {initialViewport}
     edges={[]}
     style="background:#d4d4d4;"
   >

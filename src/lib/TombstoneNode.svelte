@@ -89,7 +89,6 @@
       image={$imageOverrides[id] ?? data.image}
       favicon={data.favicon}
       name={data.name}
-      radius={data.radius}
       shape={data.shape}
       variant={4}
       look="sunken"

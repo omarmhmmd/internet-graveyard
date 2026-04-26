@@ -56,7 +56,7 @@
   viewBox="0 0 {W} {H}"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
-  style="overflow:visible;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));"
+  style="overflow:visible;pointer-events:none;"
 >
   <!-- Stems -->
   {#each stems as s}

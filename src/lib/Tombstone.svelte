@@ -6,7 +6,6 @@
     look = 'default',
     bg = '#D3D3D3',
     name = '',
-    radius: radiusProp,
     shape = 0,
   }: {
     image?: string;
@@ -15,7 +14,6 @@
     look?: 'default' | 'float' | 'stamp' | 'dark' | 'tinted' | 'sunken';
     bg?: string;
     name?: string;
-    radius?: number;
     shape?: number;
   } = $props();
 
@@ -30,30 +28,27 @@
 
   const l = looks[look] ?? looks.default;
   const faviconStyle = look === 'dark' ? 'filter:invert(1);' : '';
-  const radius = radiusProp ?? Math.round(60 + Math.random() * 70);
 
-  // ── Shape definitions (W=260, H=340) ──────────────────────────────────────
+  // ── Shape definitions (W=260, H=340) ─────────────────────────────────────
   const W = 260, H = 340;
-
   const SHAPES: string[] = [
-    // 0: Classic arch
-    `M0,340 L0,130 Q0,0 130,0 Q260,0 260,130 L260,340 Z`,
-    // 1: Gothic pointed arch
-    `M0,340 L0,211 C0,82 86,0 130,0 C174,0 260,82 260,211 L260,340 Z`,
-    // 2: Obelisk / pyramid top
-    `M0,340 L29,44 L130,0 L231,44 L260,340 Z`,
-    // 3: Tablet — flat top, rounded corners
-    `M0,340 L0,40 Q0,0 40,0 L220,0 Q260,0 260,40 L260,340 Z`,
-    // 4: Trefoil — three organic bumps
-    `M0,340 L0,224 C5,163 25,146 68,139 C38,102 35,54 70,34 C80,7 112,0 130,0 C148,0 180,7 190,34 C225,54 222,102 192,139 C235,146 255,163 260,224 L260,340 Z`,
-    // 5: Jagged / broken stone
-    `M0,340 L0,156 L21,133 L42,167 L62,105 L88,140 L114,82 L130,92 L148,61 L174,126 L200,88 L226,119 L244,95 L260,150 L260,340 Z`,
-    // 6: Art Deco stepped
-    `M0,340 L0,119 L31,119 L31,82 L70,82 L70,44 L99,44 L99,20 L161,20 L161,44 L190,44 L190,82 L229,82 L229,119 L260,119 L260,340 Z`,
-    // 7: Victorian urn — concave sides
-    `M0,340 C20,289 5,238 15,194 C5,167 5,109 0,82 Q0,0 130,0 Q260,0 260,82 C255,109 255,167 245,194 C255,238 240,289 260,340 Z`,
+    // 0: Classic round arch — semicircular top, most common upright
+    `M0,${H} L0,130 Q0,0 130,0 Q${W},0 ${W},130 L${W},${H} Z`,
+    // 1: Gothic pointed arch — ogival, two arcs meeting at apex
+    `M0,${H} L0,185 C0,75 58,0 130,0 C202,0 ${W},75 ${W},185 L${W},${H} Z`,
+    // 2: Flat tablet — rectangular, minimal rounding
+    `M0,${H} L0,10 Q0,0 10,0 L250,0 Q${W},0 ${W},10 L${W},${H} Z`,
+    // 3: Gable / peaked — triangular house-roof top
+    `M0,${H} L0,85 L130,0 L${W},85 L${W},${H} Z`,
+    // 4: Shouldered / Victorian — stepped shoulders flanking arched center
+    `M0,${H} L0,110 L35,110 L35,70 L65,0 L195,0 L225,70 L225,110 L${W},110 L${W},${H} Z`,
+    // 5: Obelisk — tapered pyramid sides
+    `M0,${H} L22,55 L130,0 L238,55 L${W},${H} Z`,
+    // 6: Urn / Victorian concave — concave sides, arch top
+    `M0,${H} C22,285 6,238 18,192 C4,162 4,110 0,82 Q0,0 130,0 Q${W},0 ${W},82 C256,110 256,162 242,192 C254,238 238,285 ${W},${H} Z`,
+    // 7: Shattered / broken stone — irregular angular fracture, varied chunk sizes
+    `M0,${H} L0,105 L8,88 L22,55 L32,85 L44,12 L55,72 L65,45 L80,6 L92,78 L100,58 L112,22 L124,80 L130,3 L140,68 L155,88 L162,75 L176,22 L188,62 L196,40 L210,88 L220,35 L232,72 L248,18 L${W},68 L${W},${H} Z`,
   ];
-
   const shapePath = SHAPES[(shape ?? 0) % SHAPES.length];
 
   let stoneEl = $state<HTMLElement | null>(null);
@@ -84,7 +79,6 @@
 {:else if variant === 4}
   <div class="card flex flex-col items-center">
     <div style="position:relative;margin-bottom:-8px;z-index:1;">
-      <!-- Clipped stone -->
       <div
         bind:this={stoneEl}
         class="skeleton"
@@ -100,7 +94,6 @@
           />
         {/if}
       </div>
-      <!-- SVG border stroke follows the shape -->
       <svg width={W} height={H} style="position:absolute;inset:0;pointer-events:none;overflow:visible;">
         <path d={shapePath} fill="none" stroke="rgba(0,0,0,0.13)" stroke-width="1.5" />
       </svg>

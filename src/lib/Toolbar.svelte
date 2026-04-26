@@ -13,6 +13,10 @@
   let buryWrap = $state<HTMLElement | null>(null);
   let pendingTool = $state<string | null>(null);
   let buryError = $state(false);
+  let buryFired = $state(false);
+
+  const URL_RE = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)$/;
+  const isValidUrl = $derived(URL_RE.test(buryUrl.trim()));
 
   $effect(() => {
     if (active !== 'bury') return;
@@ -74,10 +78,11 @@
   async function submitBury(e: Event) {
     e.preventDefault();
     let url = buryUrl.trim();
-    if (!url) {
+    if (!url || !isValidUrl) {
       buryError = true;
       return;
     }
+    buryFired = true;
 
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       if (!url.startsWith('www.')) url = 'www.' + url;
@@ -148,7 +153,7 @@
       </div>
 
       <!-- Bury: shovel -->
-      <div class="bury-wrap" bind:this={buryWrap}>
+      <div class="bury-wrap" class:bury-open={active === 'bury'} bind:this={buryWrap}>
         <button class="tool-btn action-btn" class:active={active === 'bury'} class:status-loading={buryStatus === 'loading'} onclick={() => select('bury')}>
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.16667" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
             <path d="M1.99963 24L1.8371 22.8178C1.35531 19.3137 2.32215 15.7645 4.51465 12.9889L7.5 9.20959L16.5 18.667L13.0231 21.4408C10.241 23.6603 6.67071 24.6422 3.14497 24.1574L1.99963 24Z"/>
@@ -164,7 +169,18 @@
               bind:value={buryUrl}
               autofocus={active === 'bury'}
             />
-            <button class="bury-submit" class:shake={buryError} type="submit" disabled={buryStatus === 'loading'} onanimationend={() => buryError = false}>Bury</button>
+            <button
+              class="bury-submit"
+              class:shake={buryError}
+              class:ready={isValidUrl && buryStatus === 'idle' && !buryFired}
+              class:fired={buryFired}
+              type="submit"
+              disabled={buryStatus === 'loading'}
+              onanimationend={(e) => {
+                if (e.animationName === 'bury-shake') buryError = false;
+                if (e.animationName === 'bury-fire') buryFired = false;
+              }}
+            >Bury</button>
           </form>
         </div>
         <span class="tooltip">Bury</span>
@@ -257,6 +273,11 @@
 
   .bury-wrap .tooltip {
     bottom: calc(100% + 10px);
+  }
+
+  .bury-wrap.bury-open:hover .tooltip {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .tool-btn {
@@ -417,6 +438,27 @@
   .bury-submit:disabled {
     cursor: default;
     background: #4a4a1a;
+  }
+
+  .bury-submit.ready {
+    background: #6b6b20;
+    animation: bury-ready 2s ease-in-out infinite;
+  }
+
+  @keyframes bury-ready {
+    0%, 100% { background: #6b6b20; box-shadow: inset 0 0 0px rgba(220, 220, 70, 0); }
+    50%       { background: #7c7c24; box-shadow: inset 0 0 10px rgba(220, 220, 70, 0.35); }
+  }
+
+  .bury-submit.fired {
+    animation: bury-fire 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes bury-fire {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(0.93); }
+    65%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
   }
 
   .bury-submit.shake {

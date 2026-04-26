@@ -12,5 +12,5 @@
   </div>
   <h1 style="margin:0;font-family:'Inter',sans-serif;font-size:140px;font-weight:700;color:#2a2a2a;letter-spacing:-4px;line-height:1;">Internet</h1>
   <h1 style="margin:0;font-family:'Inter',sans-serif;font-size:140px;font-weight:700;color:#2a2a2a;letter-spacing:-4px;line-height:1;padding-bottom:24px;">Graveyard</h1>
-  <p style="margin:16px 0 0;font-family:'Inter',sans-serif;font-size:22px;color:#888;letter-spacing:0;text-transform:uppercase;">RIP to these websites. Please bury a website here that is no longer with us.</p>
+  <p style="margin:16px 0 0;font-family:'Inter',sans-serif;font-size:22px;color:#888;letter-spacing:0;text-transform:uppercase;">RIP to these institutions, companies, studios, platforms, and websites that are no longer with us. If you have come across a website that has come to an end, please bury it here.</p>
 </div>

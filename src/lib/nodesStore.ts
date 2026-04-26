@@ -21,8 +21,10 @@ const CELL_H = 1000;
 const PAD = 400;
 const COLS = 8;
 const ROWS = 7;
-const CANVAS_W = COLS * CELL_W + PAD * 2;
-const CANVAS_H = ROWS * CELL_H + PAD * 2;
+export const CANVAS_W = COLS * CELL_W + PAD * 2;
+export const CANVAS_H = ROWS * CELL_H + PAD * 2;
+export const TITLE_X = CANVAS_W / 2;
+export const TITLE_Y = CANVAS_H / 2 - 400;
 const TITLE_CLEAR = 900;
 const cx = CANVAS_W / 2;
 const cy = CANVAS_H / 2;
@@ -63,7 +65,6 @@ export function buildNodesFromSites(sites: Site[]): Node[] {
     const cell = availableCells[i % availableCells.length];
     const jitterX = r() * (CELL_W - CARD_W);
     const jitterY = r() * (CELL_H - 460);
-    const radius = Math.round(60 + r() * 70);
     return {
       id: String(i),
       type: 'tombstone',
@@ -76,8 +77,7 @@ export function buildNodesFromSites(sites: Site[]): Node[] {
         favicon: site.favicon ?? '',
         url: site.url,
         name: site.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0],
-        radius,
-        shape: radius % 8,
+        shape: Math.floor(r() * 8),
       },
       draggable: false,
       selectable: false,
