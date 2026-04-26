@@ -1,10 +1,19 @@
 <script lang="ts">
   import { useSvelteFlow, Panel } from '@xyflow/svelte';
-  import { nodesStore, sitesStore, buildNodesFromSites, imageOverrides } from './nodesStore';
+  import { nodesStore, sitesStore, buildNodesFromSites, imageOverrides, TITLE_X, TITLE_Y } from './nodesStore';
   import { activeTool } from './toolStore';
   import { get } from 'svelte/store';
 
-  const { zoomIn, zoomOut, fitView } = useSvelteFlow();
+  const { zoomIn, zoomOut, fitView, setViewport } = useSvelteFlow();
+
+  function recenter() {
+    const zoom = 0.1;
+    setViewport({
+      x: window.innerWidth / 2 - TITLE_X * zoom,
+      y: window.innerHeight / 2 - (TITLE_Y + 400) * zoom,
+      zoom,
+    }, { duration: 600 });
+  }
 
   let active = $state<string | null>('pan');
   let buryUrl = $state('');
@@ -219,6 +228,12 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
         </button>
         <span class="tooltip">Zoom out</span>
+      </div>
+      <div class="tip-wrap">
+        <button class="tool-btn" onclick={recenter}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+        </button>
+        <span class="tooltip">Re-center</span>
       </div>
     </div>
   </div>
